@@ -23,4 +23,4 @@ def set_state(d):
     dc = d.copy()
     dc['version'] = version
     with open(state_file_path, 'w') as state_file:
-        json.dumps(dc, state_file, sort_keys=True, indent=4)
+        json.dump(dc, state_file, sort_keys=True, indent=4)

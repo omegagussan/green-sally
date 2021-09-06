@@ -14,13 +14,13 @@ def apply_operation(pin, duration):
 
 class AdjustDesk:
     def __init__(self):
-        self.up = 18
-        self.down = 19
+        self.up = 17
+        self.down = 18
 
         self.raise_time = 10
         self.lower_time = 10
 
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)
         GPIO.setup(self.down, GPIO.OUT)
 
