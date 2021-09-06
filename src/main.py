@@ -22,9 +22,9 @@ def wait_until_next_operation():
 while True:
     if is_working_time():
         state = get_state()
-        if state["position"] == "up":
+        if state["position"] == 1:
             adjust_desk.lower_desk()
-        elif state["position"] == "down":
+        elif state["position"] == 0:
             adjust_desk.raise_desk()
         else:
             raise StatePositionException("Unknown position")
