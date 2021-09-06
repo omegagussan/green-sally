@@ -17,8 +17,8 @@ class AdjustDesk:
         self.up = 17
         self.down = 18
 
-        self.raise_time = 10
-        self.lower_time = 10
+        self.raise_time = 12
+        self.lower_time = 8
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)
