@@ -22,7 +22,7 @@ class AdjustDesk:
 
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.up, GPIO.OUT)
-        GPIO.setup(self.down, GPIO.IN)
+        GPIO.setup(self.down, GPIO.OUT)
 
     def raise_desk(self):
         apply_operation(self.up, self.raise_time)
