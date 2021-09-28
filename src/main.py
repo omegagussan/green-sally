@@ -39,6 +39,7 @@ while True:
         else:
             raise StatePositionException("Unknown position")
     else:
+        state = get_state()
         # return to lower state unless in lower-state
         if state["position"] != 0:
             adjust_desk.lower_desk()
