@@ -3,7 +3,7 @@
 import time
 import RPi.GPIO as GPIO
 
-from src.state import set_state
+from src.state import set_state_value
 
 
 def apply_operation(pin, duration):
@@ -26,11 +26,11 @@ class AdjustDesk:
 
     def raise_desk(self):
         apply_operation(self.up, self.raise_time)
-        set_state({"position": 1})
+        set_state_value("position", 1)
 
     def lower_desk(self):
         apply_operation(self.down, self.lower_time)
-        set_state({"position": 0})
+        set_state_value("position", 0)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         GPIO.cleanup()

@@ -24,3 +24,15 @@ def set_state(d):
     dc['version'] = version
     with open(state_file_path, 'w') as state_file:
         json.dump(dc, state_file, sort_keys=True, indent=4)
+
+
+def set_state_value(key, value):
+    dc = get_state()
+    dc[key] = value
+    with open(state_file_path, 'w') as state_file:
+        json.dump(dc, state_file, sort_keys=True, indent=4)
+
+
+def get_value(key):
+    dc = get_state()
+    return dc["key"]
