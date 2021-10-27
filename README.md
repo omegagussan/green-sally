@@ -11,4 +11,4 @@ https://www.youtube.com/watch?v=6A2V9Bu80J4
 Flower by moby is a popular workout song with the catch-phrase "green sally up, green sally down".
 
 ### deploy
-scp -r /Users/gustasan/Documents/Code/green-sally pi@192.168.1.98:/home/pi/green-sally
+scp -r /Users/gustasan/Documents/Code/green-sally pi@[IP-ADDRESS]:/home/pi/green-sally
