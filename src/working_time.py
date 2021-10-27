@@ -26,7 +26,10 @@ def time_until_end_of_day():
 
 def time_until_next_working_day():
     now = datetime.now()
-    if now.isoweekday() in set((6, 7)):
+    if now.isoweekday() in set((5, 6)):
         next_working_day = now.date() + datetime.timedelta(days=now.isoweekday() % 5)
-    start_of_day = datetime(next_working_day.year, next_working_day.month, next_working_day.day, start_hour, 0)
+        start_of_day = datetime(next_working_day.year, next_working_day.month, next_working_day.day, start_hour, 0)
+    else:
+        now_date = now.date()
+        start_of_day = datetime(now_date.year, now_date.month, now_date.day + 1, start_hour, 0)
     return (start_of_day - now).total_seconds()

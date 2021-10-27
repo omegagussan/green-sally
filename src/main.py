@@ -28,11 +28,12 @@ def wait_standing():
 
 
 def next_action_to_epoch_s(next_s):
-    return int(time.time()) + next_s
+    return round(int(time.time()) + next_s)
 
 
 def sleep_and_update_state(wait_time):
     set_state_value("next_action", next_action_to_epoch_s(wait_time))
+    set_state_value("last_action", int(round(time.time())))
     time.sleep(wait_time)
 
 
