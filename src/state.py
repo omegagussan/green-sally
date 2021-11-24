@@ -9,7 +9,7 @@ class StateVersionException(Exception):
     pass
 
 
-def get_state():
+def _get_state():
     with open(state_file_path, 'r') as state_file:
         data = json.load(state_file)
         if data['version'] == 0:
@@ -26,14 +26,16 @@ def set_state(d):
         json.dump(dc, state_file, sort_keys=True, indent=4)
 
 
-def set_state_value(key, value):
-    dc = get_state()
-    dc['version'] = version
-    dc[key] = value
-    with open(state_file_path, 'w') as state_file:
-        json.dump(dc, state_file, sort_keys=True, indent=4)
+class State:
+    def __init__(self):
+        self.state = _get_state()
+        pass
 
+    def set_state_value(self, key, value):
+        self.state[key] = value
 
-def get_value(key):
-    dc = get_state()
-    return dc[key]
+    def get_value(self, key):
+        return self.state[key]
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        set_state(self.state)

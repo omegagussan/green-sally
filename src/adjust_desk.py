@@ -3,12 +3,14 @@
 import time
 import RPi.GPIO as GPIO
 
-from src.state import set_state_value
+from src.height_sensor import HeightSensor
 
 
 def apply_operation(pin, duration):
     GPIO.output(pin, GPIO.HIGH)
+    print("applying")
     time.sleep(duration)
+    print("stop")
     GPIO.output(pin, GPIO.LOW)
 
 
@@ -17,8 +19,10 @@ class AdjustDesk:
         self.up = 17
         self.down = 18
 
-        self.raise_time = 12
-        self.lower_time = 8
+        self.resolution = 3
+
+        self.high_pos = 113  # https://www.healthline.com/nutrition/6-tips-for-using-a-standing-desk
+        self.low_pos = 80
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)
@@ -27,13 +31,24 @@ class AdjustDesk:
         GPIO.output(self.up, GPIO.LOW)
         self.debug()
 
-    def raise_desk(self):
-        apply_operation(self.up, self.raise_time)
-        set_state_value("position", 1)
+        self.heightSensor = HeightSensor()
 
-    def lower_desk(self):
-        apply_operation(self.down, self.lower_time)
-        set_state_value("position", 0)
+    def threshold(self):
+        return (self.high_pos + self.low_pos) / 2
+
+    def raise_desk(self, state):
+        while self.heightSensor.get() < self.high_pos:
+            print("raising")
+            print(self.heightSensor.get_smooth())
+            apply_operation(self.up, self.resolution)
+            state.set_state_value("position", self.heightSensor.get_smooth())
+
+    def lower_desk(self, state):
+        while self.heightSensor.get() > self.low_pos:
+            print("lowering")
+            print(self.heightSensor.get_smooth())
+            apply_operation(self.down, self.resolution)
+            state.set_state_value("position", self.heightSensor.get_smooth())
 
     def debug(self):
         print(f"up is {GPIO.input(self.up)}")
