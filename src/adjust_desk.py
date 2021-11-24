@@ -23,6 +23,9 @@ class AdjustDesk:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)
         GPIO.setup(self.down, GPIO.OUT)
+        GPIO.output(self.down, GPIO.LOW)
+        GPIO.output(self.up, GPIO.LOW)
+        self.debug()
 
     def raise_desk(self):
         apply_operation(self.up, self.raise_time)
@@ -32,5 +35,10 @@ class AdjustDesk:
         apply_operation(self.down, self.lower_time)
         set_state_value("position", 0)
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        GPIO.cleanup()
+    def debug(self):
+        print(f"up is {GPIO.input(self.up)}")
+        print(f"down is {GPIO.input(self.down)}")
+
+
+def __exit__(self, exc_type, exc_val, exc_tb):
+    GPIO.cleanup()
