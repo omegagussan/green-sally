@@ -22,7 +22,7 @@ class AdjustDesk:
         self.resolution = 3
 
         self.high_pos = 113  # https://www.healthline.com/nutrition/6-tips-for-using-a-standing-desk
-        self.low_pos = 80
+        self.low_pos = 90
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)

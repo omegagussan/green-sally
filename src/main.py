@@ -36,7 +36,7 @@ def next_action_to_epoch_s(next_s):
     return round(int(time.time()) + next_s)
 
 
-def sleep_and_update_state(state, wait_time):
+def update_state(state, wait_time):
     state.set_state_value("next_action", next_action_to_epoch_s(wait_time))
     state.set_state_value("last_action", int(round(time.time())))
 
@@ -50,14 +50,15 @@ while True:
         else:
             if state.state["position"] > adjust_desk.threshold():
                 adjust_desk.lower_desk(state)
-                sleep_and_update_state(state, wait_until_next_operation())
+                update_state(state, wait_until_next_operation())
             elif state.state["position"] <= adjust_desk.threshold():
                 adjust_desk.raise_desk(state)
-                sleep_and_update_state(state, wait_standing())
+                update_state(state, wait_standing())
             else:
                 raise StatePositionException("Unknown position")
     else:
         # return to lower state unless in lower-state
+        time.sleep(10)
         if state.state["position"] > adjust_desk.low_pos:
             adjust_desk.lower_desk(state)
-        sleep_and_update_state(state, time_until_next_working_day())
+            update_state(state, time_until_next_working_day())
