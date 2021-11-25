@@ -26,7 +26,7 @@ def wait_until_next_operation():
     min = 45  # minutes
     max = 120  # minutes
     delay = random.randint(min, max) * 60
-    if time_until_end_of_day() < delay:
+    if time_until_end_of_day() < delay and not disable_working_hours:
         return time_until_end_of_day()
     return delay
 
