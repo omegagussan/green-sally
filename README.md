@@ -12,3 +12,7 @@ Flower by moby is a popular workout song with the catch-phrase "green sally up, 
 
 ### deploy
 scp -r /Users/gustasan/Documents/Code/green-sally pi@[IP-ADDRESS]:/home/pi/green-sally
+
+### arguments
+
+use for example DISABLE_WORKING_TIME=true RAISED_TIME=10 
