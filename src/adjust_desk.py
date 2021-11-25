@@ -6,20 +6,12 @@ import RPi.GPIO as GPIO
 from src.height_sensor import HeightSensor
 
 
-def apply_operation(pin, duration):
-    GPIO.output(pin, GPIO.HIGH)
-    print("applying")
-    time.sleep(duration)
-    print("stop")
-    GPIO.output(pin, GPIO.LOW)
-
-
 class AdjustDesk:
     def __init__(self):
         self.up = 17
         self.down = 18
 
-        self.resolution = 3
+        self.resolution = 1
 
         self.high_pos = 113  # https://www.healthline.com/nutrition/6-tips-for-using-a-standing-desk
         self.low_pos = 90
@@ -37,22 +29,26 @@ class AdjustDesk:
         return (self.high_pos + self.low_pos) / 2
 
     def raise_desk(self, state):
-        while self.heightSensor.get() < self.high_pos:
-            print("raising")
-            print(self.heightSensor.get_smooth())
-            apply_operation(self.up, self.resolution)
-            state.set_state_value("position", self.heightSensor.get_smooth())
+        condition_function = lambda _: self.heightSensor.get() <= self.high_pos
+        self.apply_operation(self.up, condition_function, "raising")
+        state.set_state_value("position", self.heightSensor.get_smooth())
 
     def lower_desk(self, state):
-        while self.heightSensor.get() > self.low_pos:
-            print("lowering")
-            print(self.heightSensor.get_smooth())
-            apply_operation(self.down, self.resolution)
-            state.set_state_value("position", self.heightSensor.get_smooth())
+        condition_function = lambda _: self.heightSensor.get() >= self.low_pos
+        self.apply_operation(self.down, condition_function, "lowering")
+        state.set_state_value("position", self.heightSensor.get_smooth())
 
     def debug(self):
         print(f"up is {GPIO.input(self.up)}")
         print(f"down is {GPIO.input(self.down)}")
+
+    def apply_operation(self, pin, condition_function, friendly_log_name=None):
+        GPIO.output(pin, GPIO.HIGH)
+        while condition_function():
+            if friendly_log_name:
+                print(friendly_log_name)
+            sleep(self.resolution)
+        GPIO.output(pin, GPIO.LOW)
 
 
 def __exit__(self, exc_type, exc_val, exc_tb):
