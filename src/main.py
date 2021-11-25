@@ -6,12 +6,15 @@ from src.working_time import is_working_time, time_until_end_of_day, time_until_
 from src.adjust_desk import AdjustDesk
 from src.state import State
 from src.height_sensor import HeightSensor
+import os
 
 adjust_desk = AdjustDesk()
 state = State()
 height_sensor = HeightSensor()
 state.set_state_value("position", height_sensor.get())
-raised_time = (20 * 60)
+raised_time = int(os.environ['RAISED_TIME']) if os.environ['RAISED_TIME'] else (20 * 60)
+disable_working_hours = True if os.environ['DISABLE_WORKING_TIME'] else False
+
 resolution_time = 1
 
 
@@ -42,10 +45,10 @@ def update_state(state, wait_time):
 
 
 while True:
-    if is_working_time():
+    if is_working_time() or disable_working_hours:
         now_ts = int(round(time.time()))
+        state.set_state_value("position", height_sensor.get())
         if state.state["next_action"] > now_ts:
-            state.set_state_value("position", height_sensor.get())
             time.sleep(resolution_time)
         else:
             if state.state["position"] > adjust_desk.threshold():

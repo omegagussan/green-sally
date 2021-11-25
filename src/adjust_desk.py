@@ -19,8 +19,7 @@ class AdjustDesk:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.up, GPIO.OUT)
         GPIO.setup(self.down, GPIO.OUT)
-        GPIO.output(self.down, GPIO.LOW)
-        GPIO.output(self.up, GPIO.LOW)
+        self.set_idle()
         self.debug()
 
         self.heightSensor = HeightSensor()
@@ -29,14 +28,22 @@ class AdjustDesk:
         return (self.high_pos + self.low_pos) / 2
 
     def raise_desk(self, state):
-        condition_function = lambda _: self.heightSensor.get() <= self.high_pos
+        condition_function = lambda: self.heightSensor.get() <= self.high_pos
+        self.set_idle()
         self.apply_operation(self.up, condition_function, "raising")
+        self.set_idle()
         state.set_state_value("position", self.heightSensor.get_smooth())
 
     def lower_desk(self, state):
-        condition_function = lambda _: self.heightSensor.get() >= self.low_pos
+        condition_function = lambda: self.heightSensor.get() >= self.low_pos
+        self.set_idle()
         self.apply_operation(self.down, condition_function, "lowering")
+        self.set_idle()
         state.set_state_value("position", self.heightSensor.get_smooth())
+
+    def set_idle(self):
+        GPIO.output(self.down, GPIO.LOW)
+        GPIO.output(self.up, GPIO.LOW)
 
     def debug(self):
         print(f"up is {GPIO.input(self.up)}")
@@ -47,7 +54,8 @@ class AdjustDesk:
         while condition_function():
             if friendly_log_name:
                 print(friendly_log_name)
-            sleep(self.resolution)
+            self.debug()
+            time.sleep(self.resolution)
         GPIO.output(pin, GPIO.LOW)
 
 
